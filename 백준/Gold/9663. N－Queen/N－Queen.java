@@ -3,6 +3,7 @@ public class Main {
 	public static void main(String[] a) throws IOException {
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 		int n=Integer.parseInt(br.readLine());
+        //하드코딩 만만세
 		if(n == 1) System.out.println(1);
 		else if(n == 2 || n==3) System.out.println(0);
 		else if(n == 4) System.out.println(2);
