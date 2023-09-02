@@ -22,7 +22,7 @@ public class Main {
     	
     	map = new int[n][n];
     	
-    	
+    	//입력 받습니다
     	for(int i=0; i<n; i++) {
     		tk = new StringTokenizer(br.readLine());
     		for(int j=0; j<n; j++) 
@@ -32,8 +32,10 @@ public class Main {
     	int cnt = 0;
     	while(true) {
     		visited = new boolean[n][n];
+            //인구 이동이 있었는지 체크하는 변수
     		moved = false;
     		
+            //모든 국가를 방문하는 게 1 싸이클
     		for(int i=0; i<n; i++) {
         		for(int j=0; j<n; j++) {
         			if(!visited[i][j]) {
@@ -41,6 +43,7 @@ public class Main {
         			}
         		}
         	}
+            //움직이지 않았으면 종료합니다
     		if(!moved) 
     			break;
     		cnt++;
@@ -52,8 +55,10 @@ public class Main {
     private static void dfs(Point start) {
     	Stack<Point> s = new Stack<>();
     	s.add(start);
+        //국경이 열릴 나라들을 담아둘 list
     	List<Point> countries = new ArrayList<Point>();
     	countries.add(start);
+        //국경잉 열린 나라의 인구 수 합
     	int populSum= map[start.x][start.y];
     	visited[start.x][start.y] = true;
     	
@@ -65,13 +70,18 @@ public class Main {
     			int ny = cur.y + dy[i];
     			
     			if(isValidPoint(nx, ny) && !visited[nx][ny]) {
+                    //국경 열릴 수 있나 조건 확인
     				if(Math.abs(map[cur.x][cur.y] - map[nx][ny]) >= L 
     						&& Math.abs(map[cur.x][cur.y] - map[nx][ny]) <= R) {
     					Point c = new Point(nx, ny);
+                        //list에 담아주기
     					countries.add(c);
     					s.push(c);
     					visited[nx][ny] = true;
+                        
+                        //인구 합 갱신
     					populSum += map[nx][ny];
+                        //국경이 열렸으니 moved true로
     					moved = true;
     				}
     			}
@@ -81,8 +91,10 @@ public class Main {
     }
     
     private static void movePeople(List<Point> countries, int populSum) {
+        //이동된 인구 수 계산
     	int averPopul = (int) Math.floor(populSum / countries.size());
     	
+        //list에 담겨있는 나라들 하나씩 꺼내면서 인구수 갱신
     	for(Point p: countries) {
     		map[p.x][p.y] = averPopul;
     	}
