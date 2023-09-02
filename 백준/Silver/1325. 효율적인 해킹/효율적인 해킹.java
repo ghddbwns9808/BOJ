@@ -23,6 +23,8 @@ public class Main {
             neighbor.add(new ArrayList<>());
         }
 
+        //인접 리스트로 그래프 만들기
+        //근데 이제 간선 방향을 반대로 저장해요
         while(m-->0){
             tk = new StringTokenizer(br.readLine());
             int to = Integer.parseInt(tk.nextToken());
@@ -31,13 +33,17 @@ public class Main {
             neighbor.get(to).add(from);
         }
 
+        //dfs 돌리기
         for(int i=1; i<=n; i++){
             visited = new boolean[n+1];
             dfs(i);
         }
+        
+        //max 값 찾기
         for(int i=1; i<=n; i++) 
             curMax = Math.max(curMax, result[i]);
 
+        //result 배열을 돌며 max값과 같으면 출력 -> 자동 오름차순
         for(int i=1; i<=n; i++) {
             if (result[i] == curMax)
                 bw.write(i + " ");
@@ -57,6 +63,7 @@ public class Main {
                 if(!visited[i]){
                     s.push(i);
                     visited[i] = true;
+                    //다른건 dfs랑 다 독같은데 방문하는 노드의 result값을 ++ 해줍니다
                     result[i]++;
                 }
             }
