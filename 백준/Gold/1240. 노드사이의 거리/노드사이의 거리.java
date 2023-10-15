@@ -13,6 +13,9 @@ public class Main {
 
         adjacent = new int[N+1][N+1];
 
+        // 인접 노드끼리 거리 정보를 2차원 int 배열로 저장
+        // 인접 리스트로 저장하는 것이 더 효율적일 듯?
+        //그치만 귀찮은걸...
         for (int i=0; i<N-1; i++){
             tk = new StringTokenizer(br.readLine());
             int from = Integer.parseInt(tk.nextToken());
@@ -28,12 +31,14 @@ public class Main {
             int from = Integer.parseInt(tk.nextToken());
             int to = Integer.parseInt(tk.nextToken());
 
+            //from에서 to 가는 거리 bfs로 찾기
             bw.write(bfs(from, to) + "\n");
         }
         bw.flush();
     }
 
     private static int bfs(int from, int to){
+        //int[2] -> {이번 노드 번호, 지금까지 더해진 거리}
         Queue<int[]> q = new LinkedList<>();
         q.add(new int[]{from, 0});
         boolean[] visited = new boolean[N+1];
@@ -42,6 +47,7 @@ public class Main {
         while (!q.isEmpty()){
             int[] cur = q.poll();
 
+            //이번에 꺼낸 노드 번호가 to 면 지금까지 더한 거리 return
             if (cur[0] == to)
                 return cur[1];
 
@@ -52,16 +58,12 @@ public class Main {
                 }
             }
         }
+        //안 이어지는 경우는 없는 듯?
         return -1;
     }
 }
 
-class Node{
-    int to;
-    int cost;
-
-    public Node(int to, int c){
-        this.to = to;
-        this.cost = c;
-    }
-}
+/*
+1. 인접한 노드끼리의 거리를 2차원 int 배열에 저장
+2. bfs로 두 노드 사이의 거리 찾기
+ */
