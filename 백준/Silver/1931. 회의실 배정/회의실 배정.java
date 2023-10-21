@@ -1,71 +1,62 @@
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.PriorityQueue;
-import java.util.StringTokenizer;
-import java.util.stream.IntStream;
+import java.io.*;
+import java.util.*;
 
 public class Main {
-	static BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-	static BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
-	static StringTokenizer tk;
+    static BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+    static BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
 
-	public static void main(String[] args) throws IOException {
-		int n = Integer.parseInt(br.readLine());
-		int[][] meeting = new int[n][2];
-		int cnt = 0;
-		
-		PriorityQueue<Meeting> pq = new PriorityQueue<>(Collections.reverseOrder());
-		
-		for(int i=0; i<n; i++) {
-			tk = new StringTokenizer(br.readLine(), " ");
-			pq.add(new Meeting(Integer.parseInt(tk.nextToken()), Integer.parseInt(tk.nextToken())));
-		}
-		 Meeting cur = pq.poll();
+    static int N;
+    public static void main(String[] args) throws IOException {
+        N = Integer.parseInt(br.readLine());
+        PriorityQueue<Meeting> pq = new PriorityQueue<>();
+        int endTime;
 
-		 while(!pq.isEmpty()) {
-			 Meeting next = pq.poll();
+        StringTokenizer tk;
+        for (int i=0; i<N; i++){
+            tk = new StringTokenizer(br.readLine());
+            pq.add(new Meeting(Integer.parseInt(tk.nextToken()), Integer.parseInt(tk.nextToken())));
+        }
 
-			 if(cur.endT > next.startT) {
-				 if(cur.endT >= next.endT)
-					 cur = next;
-				 else
-					 continue;
-			 }
-			 else {
-				 cnt++;
-				 cur = next;
-			 }
-		}
-		cnt++;
-		System.out.println(cnt);
-	}
+        int cnt = 1;
+        //첫 회의는 바로 넣기
+        endTime = pq.poll().end;
+
+        // 두번째 회의부터 마지막 회의까지 순회
+        while (!pq.isEmpty()){
+            Meeting cur = pq.poll();
+            if (cur.start >= endTime){
+                endTime = cur.end;
+                cnt++;
+            }
+        }
+
+        //stack 사이즈 출력
+        bw.write(cnt+"");
+        bw.flush();
+    }
+
 }
 
 class Meeting implements Comparable<Meeting>{
-	int startT;
-	int endT;
-	
-	public Meeting(int start, int end) {
-		this.startT = start;
-		this.endT = end;
-	}
+    int start;
+    int end;
 
-	@Override
-	public int compareTo(Meeting o) {
-		if(this.startT < o.startT)
-			return 1;
-		else if (this.startT == o.startT) {
-			if(this.endT <= o.endT)
-				return 1;
-			else
-				return -1;
-		}else {
-			return -1;
-		}
-	}	
+    public Meeting(int s, int e){
+        this.start = s;
+        this.end = e;
+    }
+
+    @Override
+    public int compareTo(Meeting meeting) {
+        if (this.end == meeting.end)
+            return this.start - meeting.start;
+        return this.end - meeting.end;
+    }
 }
+
+/*
+1. 회의를 끝나는 시간을 기준으로 정렬한다.
+2. 순서대로 스택에 넣는다
+2-1 스택 top 회의가 내 시작 시간보다 크면 넣지 않는다
+3. 스택의 사이즈가 정답
+ */
