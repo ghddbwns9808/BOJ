@@ -5,68 +5,74 @@ public class Main {
     static BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
     static BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
 
-    static ArrayList<ArrayList<Integer>> neighbor = new ArrayList<>();
-    static boolean[] visited;
-    static int[] result;
-    static int n;
+    static List<ArrayList<Integer>> relation;
+    static PriorityQueue<Integer> pq = new PriorityQueue();
+    static boolean[] vst;
+    static int[] score;
+    static int N, M, ans;
 
     public static void main(String[] args) throws IOException {
-        StringTokenizer tk = new StringTokenizer(br.readLine());
-        n = Integer.parseInt(tk.nextToken());
-        int m = Integer.parseInt(tk.nextToken());
+        input();
+        solve();
 
-        int curMax = Integer.MIN_VALUE;
-
-        result = new int[n+1];
-
-        for(int i=0;i<=n;i++){
-            neighbor.add(new ArrayList<>());
+        for(int i=1; i<=N; i++){
+            if (score[i] > ans){
+                pq.clear();
+                pq.offer(i);
+                ans = score[i];
+            } else if (score[i] == ans) {
+                pq.offer(i);
+            }
         }
 
-        //인접 리스트로 그래프 만들기
-        //근데 이제 간선 방향을 반대로 저장해요
-        while(m-->0){
-            tk = new StringTokenizer(br.readLine());
-            int to = Integer.parseInt(tk.nextToken());
-            int from = Integer.parseInt(tk.nextToken());
-
-            neighbor.get(to).add(from);
-        }
-
-        //dfs 돌리기
-        for(int i=1; i<=n; i++){
-            visited = new boolean[n+1];
-            dfs(i);
-        }
-        
-        //max 값 찾기
-        for(int i=1; i<=n; i++) 
-            curMax = Math.max(curMax, result[i]);
-
-        //result 배열을 돌며 max값과 같으면 출력 -> 자동 오름차순
-        for(int i=1; i<=n; i++) {
-            if (result[i] == curMax)
-                bw.write(i + " ");
-        }
+        while (!pq.isEmpty())
+            bw.write(pq.poll() + " ");
         bw.flush();
+        bw.close();
     }
 
-    private static void dfs(int start){
-        Stack<Integer> s = new Stack<>();
-        s.add(start);
-        visited[start] = true;
+    static void input() throws IOException{
+        StringTokenizer tk = new StringTokenizer(br.readLine());
+        N = Integer.parseInt(tk.nextToken());
+        M = Integer.parseInt(tk.nextToken());
+        score = new int[N+1];
 
-        while (!s.isEmpty()){
-            int cur = s.pop();
+        relation = new ArrayList();
+        for(int i=0; i<=N; i++)
+            relation.add(new ArrayList());
 
-            for(int i: neighbor.get(cur)){
-                if(!visited[i]){
-                    s.push(i);
-                    visited[i] = true;
-                    //다른건 dfs랑 다 독같은데 방문하는 노드의 result값을 ++ 해줍니다
-                    result[i]++;
+        for(int i=0; i<M; i++){
+            tk = new StringTokenizer(br.readLine());
+            int a = Integer.parseInt(tk.nextToken());
+            int b = Integer.parseInt(tk.nextToken());
+
+            relation.get(a).add(b);
+        }
+    }
+
+    static void solve(){
+        for(int i=1; i<=N; i++){
+            vst = new boolean[N+1];
+            bfs(i);
+        }
+    }
+
+    static void bfs(int start){
+        vst[start] = true;
+        Deque<Integer> q = new ArrayDeque<>();
+        q.offerFirst(start);
+
+        while (!q.isEmpty()){
+            int cur = q.removeFirst();
+
+            for(int nxt: relation.get(cur)){
+                if (!vst[nxt]){
+                    score[nxt]++;
+                    vst[nxt] = true;
+                    q.offerFirst(nxt);
                 }
             }
         }
     }
+
 }
