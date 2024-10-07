@@ -10,8 +10,8 @@ public class Main {
 
     public static void main(String[] args) throws IOException {
         StringTokenizer tk = new StringTokenizer(br.readLine());
-        int a = Integer.parseInt(tk.nextToken());
-        int b = Integer.parseInt(tk.nextToken());
+        long a = Long.parseLong(tk.nextToken());
+        long b = Long.parseLong(tk.nextToken());
         System.out.println((a+b) * (a-b));
     }
 }
