@@ -57,24 +57,20 @@ public class Main {
         int A = find(a);
         int B = find(b);
 
-        /*
+        
         if (A != B){
             if (A > B){
                 parent[A] = B;
                 friends.replace(B, friends.get(A) + friends.get(B));
+                return friends.get(B);
             }else{
                 parent[B] = A;
                 friends.replace(A, friends.get(A) + friends.get(B));
+                return friends.get(A);
             }
         }
-         */
 
-        if (A != B){
-            parent[A] = B;
-            friends.replace(B, friends.get(A) + friends.get(B));
-        }
-
-        return friends.get(B);
+        return friends.get(A);
     }
 
 }
